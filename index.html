@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pathan Sajida — Software Engineer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    emailjs.init('fs5wI4n69UFxh1A8c');
+  </script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            neon: { cyan: '#00f0ff', purple: '#a855f7', green: '#00ff88', pink: '#f472b6' },
+            dark: { 50: '#18181b', 100: '#111113', 200: '#0c0c0e', 300: '#08080a', 400: '#050507', 500: '#000000' }
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root { --neon-cyan: #00f0ff; --neon-purple: #a855f7; --neon-green: #00ff88; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #020205; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+    ::selection { background: rgba(0,240,255,0.2); color: #fff; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: rgba(0,240,255,0.3); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(0,240,255,0.5); }
+
+    #bg-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 1;
+      filter: blur(3px);
+    }
+
+    .bg-glow {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80vw; height: 80vh;
+      background: radial-gradient(circle, rgba(168,85,247,0.04) 0%, rgba(0,240,255,0.02) 50%, transparent 100%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .glass { background: rgba(255,255,255,0.025); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.06); }
+    .glass-strong { background: rgba(255,255,255,0.04); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.08); }
+
+    .text-gradient { background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .text-gradient-alt { background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .bg-gradient-neon { background: linear-gradient(135deg, rgba(0,240,255,0.15), rgba(168,85,247,0.15)); }
+
+    #navbar { transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+    #navbar.scrolled { background: rgba(0,0,0,0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+    .reveal { opacity: 0; transform: translateY(35px); transition: all 0.9s cubic-bezier(0.16,1,0.3,1); }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+    .reveal-left { opacity: 0; transform: translateX(-40px); transition: all 0.9s cubic-bezier(0.16,1,0.3,1); }
+    .reveal-left.active { opacity: 1; transform: translateX(0); }
+    .reveal-scale { opacity: 0; transform: scale(0.92); transition: all 0.9s cubic-bezier(0.16,1,0.3,1); }
+    .reveal-scale.active { opacity: 1; transform: scale(1); }
+
+    .typing-cursor { display: inline-block; width: 3px; height: 1.1em; background: var(--neon-cyan); margin-left: 3px; animation: blink 1s step-end infinite; vertical-align: text-bottom; }
+    @keyframes blink { 0%,50%{opacity:1} 51%,100%{opacity:0} }
+
+    .project-card { transition: all 0.5s cubic-bezier(0.16,1,0.3,1); }
+    .project-card:hover { border-color: rgba(0,240,255,0.35); box-shadow: 0 0 50px rgba(0,240,255,0.07), 0 25px 70px rgba(0,0,0,0.5); transform: translateY(-8px); }
+    .project-card:hover .project-img { transform: scale(1.05); }
+    .project-img { transition: transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+
+    .skill-tag { transition: all 0.3s ease; }
+    .skill-tag:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,240,255,0.15); }
+
+    .timeline-line { background: linear-gradient(to bottom, var(--neon-cyan), var(--neon-purple), transparent); }
+    .timeline-dot { box-shadow: 0 0 12px rgba(0,240,255,0.4); }
+
+    .chat-message { animation: chatIn 0.4s cubic-bezier(0.16,1,0.3,1); }
+    @keyframes chatIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+    .typing-dots span { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--neon-cyan); animation: dotBounce 1.4s infinite; }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dotBounce { 0%,60%,100%{transform:translateY(0);opacity:0.4} 30%{transform:translateY(-8px);opacity:1} }
+
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+    @keyframes pulseRing { 0%{transform:scale(1);opacity:0.4} 100%{transform:scale(1.8);opacity:0} }
+
+    .glow-orb { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; }
+
+    .btn-primary { position: relative; overflow: hidden; transition: all 0.4s ease; }
+    .btn-primary::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(0,240,255,0.2),rgba(168,85,247,0.2)); opacity:0; transition:opacity 0.4s ease; }
+    .btn-primary:hover::before { opacity:1; }
+    .btn-primary:hover { box-shadow: 0 0 30px rgba(0,240,255,0.2), 0 0 60px rgba(0,240,255,0.05); transform: translateY(-2px); }
+
+    .btn-outline { transition: all 0.4s ease; }
+    .btn-outline:hover { border-color: rgba(0,240,255,0.5); background: rgba(0,240,255,0.05); transform: translateY(-2px); }
+
+    .cert-card { transition: all 0.4s ease; }
+    .cert-card:hover { border-color: rgba(168,85,247,0.4); transform: translateY(-4px); box-shadow: 0 0 30px rgba(168,85,247,0.08); }
+
+    .nav-link { position: relative; transition: color 0.3s ease; }
+    .nav-link::after { content:''; position:absolute; bottom:-4px; left:0; width:0; height:2px; background:var(--neon-cyan); transition:width 0.3s ease; border-radius:1px; }
+    .nav-link:hover::after, .nav-link.active::after { width:100%; }
+    .nav-link:hover, .nav-link.active { color: var(--neon-cyan); }
+
+    .mobile-menu { transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); }
+    .mobile-menu.open { transform: translateX(0); }
+
+    .input-field { transition: all 0.3s ease; }
+    .input-field:focus { border-color: rgba(0,240,255,0.4); box-shadow: 0 0 20px rgba(0,240,255,0.08); }
+
+    @media (max-width: 768px) {
+      .hero-name { font-size: 2.5rem !important; line-height: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+
+  <div class="glow-orb w-[800px] h-[800px] bg-cyan-500/[0.03] top-[-200px] left-[-200px] fixed z-[1]"></div>
+  <div class="glow-orb w-[700px] h-[700px] bg-purple-500/[0.03] bottom-[-150px] right-[-150px] fixed z-[1]"></div>
+  <div class="glow-orb w-[600px] h-[600px] bg-cyan-500/5 top-[-200px] left-[-200px] fixed z-[1]"></div>
+  <div class="glow-orb w-[500px] h-[500px] bg-purple-500/5 bottom-[-150px] right-[-150px] fixed z-[1]"></div>
+
+  <!-- Navigation -->
+  <nav id="navbar" class="fixed top-0 left-0 w-full z-50 px-4 md:px-8 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="#hero" class="text-xl font-bold tracking-tight">
+        <span class="text-gradient">PS</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#about" class="nav-link text-sm font-medium text-zinc-400">About</a>
+        <a href="#skills" class="nav-link text-sm font-medium text-zinc-400">Skills</a>
+        <a href="#projects" class="nav-link text-sm font-medium text-zinc-400">Highlights</a>
+        <a href="#experience" class="nav-link text-sm font-medium text-zinc-400">Experience</a>
+        <a href="#ai-assistant" class="nav-link text-sm font-medium text-zinc-400">AI Chat</a>
+        <a href="#contact" class="nav-link text-sm font-medium text-zinc-400">Contact</a>
+      </div>
+      <div class="hidden md:flex items-center gap-3">
+        <a href="mailto:ssajida2015@gmail.com" class="btn-outline w-10 h-10 rounded-xl glass flex items-center justify-center text-zinc-400 hover:text-neon-cyan">
+          <span class="iconify" data-icon="mdi:email-outline" data-width="20"></span>
+        </a>
+        <button onclick="downloadResume()" class="btn-primary px-5 py-2.5 rounded-xl glass text-sm font-medium text-white flex items-center gap-2">
+          <span class="iconify" data-icon="mdi:download" data-width="16"></span>
+          Resume
+        </button>
+      </div>
+      <button id="menu-toggle" class="md:hidden w-10 h-10 rounded-xl glass flex items-center justify-center text-zinc-400">
+        <span class="iconify" data-icon="mdi:menu" data-width="22" id="menu-icon"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="mobile-menu fixed inset-0 z-[60] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8">
+    <button id="menu-close" class="absolute top-5 right-5 w-10 h-10 rounded-xl glass flex items-center justify-center text-zinc-400">
+      <span class="iconify" data-icon="mdi:close" data-width="22"></span>
+    </button>
+    <a href="#about" class="mobile-link text-2xl font-semibold text-zinc-300 hover:text-neon-cyan transition-colors">About</a>
+    <a href="#skills" class="mobile-link text-2xl font-semibold text-zinc-300 hover:text-neon-cyan transition-colors">Skills</a>
+    <a href="#projects" class="mobile-link text-2xl font-semibold text-zinc-300 hover:text-neon-cyan transition-colors">Highlights</a>
+    <a href="#experience" class="mobile-link text-2xl font-semibold text-zinc-300 hover:text-neon-cyan transition-colors">Experience</a>
+    <a href="#ai-assistant" class="mobile-link text-2xl font-semibold text-zinc-300 hover:text-neon-cyan transition-colors">AI Chat</a>
+    <a href="#contact" class="mobile-link text-2xl font-semibold text-zinc-300 hover:text-neon-cyan transition-colors">Contact</a>
+    <div class="flex gap-4 mt-4">
+      <a href="mailto:ssajida2015@gmail.com" class="w-12 h-12 rounded-xl glass flex items-center justify-center text-zinc-400 hover:text-neon-cyan transition-colors">
+        <span class="iconify" data-icon="mdi:email-outline" data-width="24"></span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="relative z-10">
+
+    <!-- HERO -->
+    <section id="hero" class="min-h-screen flex flex-col items-center justify-center px-4 relative">
+      <div class="text-center max-w-5xl mx-auto">
+        <div class="reveal" style="transition-delay:0ms">
+          <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-xs font-medium text-neon-cyan mb-8">
+            <span class="w-2 h-2 rounded-full bg-neon-green animate-pulse"></span>
+            Available for opportunities
+          </span>
+        </div>
+        <h1 class="reveal hero-name text-5xl md:text-7xl lg:text-[6.5rem] font-black tracking-tighter leading-[0.9] mb-6" style="transition-delay:100ms">
+          <span class="block text-white">PATHAN</span>
+          <span class="block text-gradient">SAJIDA</span>
+        </h1>
+        <div class="reveal h-8 mb-10" style="transition-delay:200ms">
+          <span class="text-lg md:text-xl font-light text-zinc-400">
+            <span id="typed-text"></span><span class="typing-cursor"></span>
+          </span>
+        </div>
+        <div class="reveal flex flex-col sm:flex-row items-center justify-center gap-4" style="transition-delay:300ms">
+          <a href="#projects" class="btn-primary px-8 py-3.5 rounded-2xl bg-gradient-to-r from-neon-cyan/20 to-neon-purple/20 border border-neon-cyan/30 text-sm font-semibold text-white flex items-center gap-2">
+            View Highlights
+            <span class="iconify" data-icon="mdi:arrow-down" data-width="18"></span>
+          </a>
+          <button onclick="downloadResume()" class="btn-outline px-8 py-3.5 rounded-2xl glass text-sm font-semibold text-zinc-300 flex items-center gap-2">
+            <span class="iconify" data-icon="mdi:download-outline" data-width="18"></span>
+            Download Resume
+          </button>
+        </div>
+      </div>
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+        <span class="iconify text-zinc-600" data-icon="mdi:chevron-down" data-width="28"></span>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="py-24 md:py-36 px-4">
+      <div class="max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-5 gap-12 md:gap-16 items-center">
+          <div class="md:col-span-2 reveal-left" style="transition-delay:0ms">
+            <div class="relative">
+              <div class="mx-auto rounded-3xl overflow-hidden glass p-1 aspect-square flex items-center justify-center" style="max-width: 320px;">
+                <div class="w-full h-full rounded-2xl bg-gradient-to-br from-neon-cyan/10 to-neon-purple/10 flex items-center justify-center">
+                  <span class="text-gradient font-black text-7xl">PS</span>
+                </div>
+              </div>
+              <div class="absolute -bottom-4 -right-4 rounded-2xl glass-strong flex items-center justify-center px-4 py-3"
+                   style="animation:float 4s ease-in-out infinite; min-width: 140px;">
+                <div class="text-center">
+                  <div class="text-sm font-bold text-gradient leading-tight">5 Years<br/>Experience</div>
+                  <div class="text-[10px] text-zinc-500 uppercase tracking-wider mt-1">Software Engineer</div>
+                </div>
+              </div>
+              <div class="absolute -top-3 -left-3 w-16 h-16 rounded-xl glass-strong flex items-center justify-center"
+                   style="animation:float 5s ease-in-out infinite 1s">
+                <span class="iconify text-neon-cyan" data-icon="mdi:code-tags" data-width="28"></span>
+              </div>
+            </div>
+          </div>
+          <div class="md:col-span-3">
+            <div class="reveal" style="transition-delay:100ms">
+              <span class="text-xs font-semibold uppercase tracking-widest text-neon-cyan/70 mb-4 block">About Me</span>
+            </div>
+            <h2 class="reveal text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6" style="transition-delay:150ms">
+              Building <span class="text-gradient">Reliable Backend Systems</span> That Scale
+            </h2>
+            <p class="reveal text-zinc-400 text-base md:text-lg leading-relaxed mb-6" style="transition-delay:200ms">
+              I'm Pathan Sajida — a backend-focused Software Engineer with 5 years building and supporting Java and Spring Boot REST APIs for a 200+ storefront e-commerce and print platform. I'm known for tracing production issues to root cause fast, using AWS CloudWatch and Zabbix to keep incident response inside SLA.
+            </p>
+            <p class="reveal text-zinc-500 text-sm md:text-base leading-relaxed mb-8" style="transition-delay:250ms">
+              I've spent the last few years steadily driving a legacy Comet-to-REST migration to completion across multiple admin modules, while staying hands-on with production support, monitoring, and fulfillment workflow automation. Comfortable in Agile teams, with strong communication and documentation habits. Now targeting backend development and production engineering roles.
+            </p>
+            <div class="reveal flex flex-wrap gap-3" style="transition-delay:300ms">
+              <div class="flex items-center gap-2 px-4 py-2 rounded-xl glass text-sm text-zinc-300">
+                <span class="iconify text-neon-cyan" data-icon="mdi:map-marker" data-width="16"></span>
+                Guntur, Andhra Pradesh, India
+              </div>
+              <div class="flex items-center gap-2 px-4 py-2 rounded-xl glass text-sm text-zinc-300">
+                <span class="iconify text-neon-purple" data-icon="mdi:school" data-width="16"></span>
+                B.Tech, EEE
+              </div>
+              <div class="flex items-center gap-2 px-4 py-2 rounded-xl glass text-sm text-zinc-300">
+                <span class="iconify text-neon-green" data-icon="mdi:rocket-launch" data-width="16"></span>
+                Open to Work
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="py-24 md:py-36 px-4 relative">
+      <div class="glow-orb w-[400px] h-[400px] bg-purple-500/5 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute"></div>
+      <div class="max-w-6xl mx-auto relative">
+        <div class="text-center mb-16">
+          <span class="reveal text-xs font-semibold uppercase tracking-widest text-neon-cyan/70 mb-4 block">Technical Arsenal</span>
+          <h2 class="reveal text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight" style="transition-delay:100ms">
+            Skills & <span class="text-gradient">Technologies</span>
+          </h2>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+          <!-- Languages -->
+          <div class="reveal glass rounded-2xl p-6" style="transition-delay:0ms">
+            <div class="flex items-center gap-3 mb-5">
+              <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+                <span class="iconify text-neon-cyan" data-icon="mdi:code-braces" data-width="22"></span>
+              </div>
+              <h3 class="font-semibold text-white">Languages</h3>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Java</span>
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">JavaScript</span>
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Python</span>
+            </div>
+          </div>
+
+          <!-- Web Development -->
+          <div class="reveal glass rounded-2xl p-6" style="transition-delay:80ms">
+            <div class="flex items-center gap-3 mb-5">
+              <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                <span class="iconify text-neon-purple" data-icon="mdi:web" data-width="22"></span>
+              </div>
+              <h3 class="font-semibold text-white">Frameworks & Web</h3>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Spring Boot</span>
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">ReactJS</span>
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">HTML / CSS</span>
+            </div>
+          </div>
+
+          <!-- Core Concepts -->
+          <div class="reveal glass rounded-2xl p-6" style="transition-delay:160ms">
+            <div class="flex items-center gap-3 mb-5">
+              <div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
+                <span class="iconify text-neon-green" data-icon="mdi:database" data-width="22"></span>
+              </div>
+              <h3 class="font-semibold text-white">Databases</h3>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">SQL</span>
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">PostgreSQL</span>
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">PG Admin</span>
+            </div>
+          </div>
+
+          <!-- AI & Prompting -->
+          <div class="reveal glass rounded-2xl p-6" style="transition-delay:240ms">
+            <div class="flex items-center gap-3 mb-5">
+              <div class="w-10 h-10 rounded-xl bg-pink-500/10 flex items-center justify-center">
+                <span class="iconify text-pink-400" data-icon="mdi:cloud-outline" data-width="22"></span>
+              </div>
+              <h3 class="font-semibold text-white">Cloud & Monitoring</h3>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">AWS CloudWatch</span>
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">AWS Console / SQS</span>
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">Zabbix</span>
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">GCP (Cloud Functions, BigQuery)</span>
+            </div>
+          </div>
+
+          <!-- Tools & Platforms -->
+          <div class="reveal glass rounded-2xl p-6" style="transition-delay:320ms">
+            <div class="flex items-center gap-3 mb-5">
+              <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+                <span class="iconify text-neon-cyan" data-icon="mdi:tools" data-width="22"></span>
+              </div>
+              <h3 class="font-semibold text-white">Support & Workflow Tools</h3>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Jenkins / ASG</span>
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">JIRA / Confluence</span>
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">Fresh Service / Jitbit</span>
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">Enfocus Switch</span>
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">GitHub / STS</span>
+            </div>
+          </div>
+
+          <!-- Soft Skills -->
+          <div class="reveal glass rounded-2xl p-6" style="transition-delay:400ms">
+            <div class="flex items-center gap-3 mb-5">
+              <div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
+                <span class="iconify text-neon-green" data-icon="mdi:account-group" data-width="22"></span>
+              </div>
+              <h3 class="font-semibold text-white">Core Strengths</h3>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">Root Cause Analysis</span>
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">Incident Management</span>
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">Agile Collaboration</span>
+              <span class="skill-tag px-3 py-1.5 rounded-lg text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">Communication</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="py-24 md:py-36 px-4">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+          <span class="reveal text-xs font-semibold uppercase tracking-widest text-neon-cyan/70 mb-4 block">Featured Work</span>
+          <h2 class="reveal text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight" style="transition-delay:100ms">
+            Key <span class="text-gradient">Contributions</span>
+          </h2>
+        </div>
+        <div class="space-y-8">
+
+          <!-- Highlight 1: REST API Migration -->
+          <div class="reveal project-card glass rounded-3xl overflow-hidden" style="transition-delay:0ms">
+            <div class="p-8 md:p-10 flex flex-col justify-center">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="iconify text-neon-cyan" data-icon="mdi:api" data-width="20"></span>
+                <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Java • Spring Boot • REST API</span>
+              </div>
+              <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Legacy Comet-to-REST Migration</h3>
+              <p class="text-zinc-400 text-sm leading-relaxed mb-6">
+                Rebuilt legacy Comet request handlers as a standardized REST API, module by module — covering site roles, user discounts, form input emails, redirect URLs, divisions, site configuration, and navigation/search — bringing 7+ admin areas onto full CRUD endpoints, all on a layered controller/provider/service/repository structure with a single, consistent response and validation contract.
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-2.5 py-1 rounded-md bg-cyan-500/10 text-cyan-400 text-[11px] font-mono font-medium">Java</span>
+                <span class="px-2.5 py-1 rounded-md bg-cyan-500/10 text-cyan-400 text-[11px] font-mono font-medium">Spring Boot</span>
+                <span class="px-2.5 py-1 rounded-md bg-purple-500/10 text-purple-400 text-[11px] font-mono font-medium">REST API</span>
+                <span class="px-2.5 py-1 rounded-md bg-purple-500/10 text-purple-400 text-[11px] font-mono font-medium">40+ Merged PRs</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Highlight 2: Production Support & RCA -->
+          <div class="reveal project-card glass rounded-3xl overflow-hidden" style="transition-delay:100ms">
+            <div class="p-8 md:p-10 flex flex-col justify-center">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="iconify text-neon-green" data-icon="mdi:alert-decagram-outline" data-width="20"></span>
+                <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">L1/L2/L3 • CloudWatch • RCA</span>
+              </div>
+              <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Production Support Across 200+ Storefronts</h3>
+              <p class="text-zinc-400 text-sm leading-relaxed mb-6">
+                Took point on L1/L2/L3 incidents for a 200+ storefront e-commerce and print platform, closing tickets within SLA. Tracked down recurring production defects — login failures, form-validation gaps, order/shipping sync errors, product-visibility bugs — by reading AWS CloudWatch logs and working each one back to its root cause, while keeping an eye on platform health day-to-day through Zabbix dashboards.
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-2.5 py-1 rounded-md bg-cyan-500/10 text-cyan-400 text-[11px] font-mono font-medium">AWS CloudWatch</span>
+                <span class="px-2.5 py-1 rounded-md bg-cyan-500/10 text-cyan-400 text-[11px] font-mono font-medium">Zabbix</span>
+                <span class="px-2.5 py-1 rounded-md bg-purple-500/10 text-purple-400 text-[11px] font-mono font-medium">Root Cause Analysis</span>
+                <span class="px-2.5 py-1 rounded-md bg-purple-500/10 text-purple-400 text-[11px] font-mono font-medium">SLA Management</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Highlight 3: GCP Data Pipelines & Dashboards -->
+          <div class="reveal project-card glass rounded-3xl overflow-hidden" style="transition-delay:200ms">
+            <div class="p-8 md:p-10 flex flex-col justify-center">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="iconify text-neon-purple" data-icon="mdi:chart-line" data-width="20"></span>
+                <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">GCP • BigQuery • Data Studio</span>
+              </div>
+              <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Support Analytics & SLA Dashboards</h3>
+              <p class="text-zinc-400 text-sm leading-relaxed mb-6">
+                Stood up GCP pipelines (Cloud Functions, BigQuery) feeding a set of Google Data Studio dashboards that gave the support team visibility into ticket trends and SLA performance — turning raw ticket data into something the team could actually act on.
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-2.5 py-1 rounded-md bg-cyan-500/10 text-cyan-400 text-[11px] font-mono font-medium">GCP Cloud Functions</span>
+                <span class="px-2.5 py-1 rounded-md bg-cyan-500/10 text-cyan-400 text-[11px] font-mono font-medium">BigQuery</span>
+                <span class="px-2.5 py-1 rounded-md bg-purple-500/10 text-purple-400 text-[11px] font-mono font-medium">Google Data Studio</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Highlight 4: Print Fulfillment Automation -->
+          <div class="reveal project-card glass rounded-3xl overflow-hidden" style="transition-delay:300ms">
+            <div class="p-8 md:p-10 flex flex-col justify-center">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="iconify text-neon-green" data-icon="mdi:printer-outline" data-width="20"></span>
+                <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Enfocus Switch • Pitstop • Phoenix</span>
+              </div>
+              <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Print Fulfillment Workflow Automation</h3>
+              <p class="text-zinc-400 text-sm leading-relaxed">
+                Tightened up the print side of the business — proof-job handling, packing-slip addressing, production ticket accuracy — working directly with press, prepress, and color-management teams, and tuning Enfocus Switch, Pitstop, and Phoenix automations along the way.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience" class="py-24 md:py-36 px-4 relative">
+      <div class="glow-orb w-[300px] h-[300px] bg-cyan-500/5 top-20 right-0 absolute"></div>
+      <div class="max-w-6xl mx-auto relative">
+        <div class="text-center mb-16">
+          <span class="reveal text-xs font-semibold uppercase tracking-widest text-neon-cyan/70 mb-4 block">Career Path</span>
+          <h2 class="reveal text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight" style="transition-delay:100ms">
+            Experience & <span class="text-gradient">Education</span>
+          </h2>
+        </div>
+
+        <!-- Professional Experience -->
+        <div class="mb-16">
+          <h3 class="reveal text-xl font-bold text-white mb-8 flex items-center gap-3">
+            <span class="iconify text-neon-cyan" data-icon="mdi:briefcase" data-width="24"></span>
+            Professional Experience
+          </h3>
+          <div class="grid sm:grid-cols-2 gap-5">
+
+            <div class="reveal glass rounded-2xl p-6" style="transition-delay:0ms">
+              <span class="text-xs font-mono text-neon-cyan mb-2 block">Mar 2021 — Mar 2026</span>
+              <h4 class="text-base font-semibold text-white mb-1">Software Engineer</h4>
+              <p class="text-sm text-neon-purple font-medium mb-3">iQuadra Information Services LLC, Nellore</p>
+              <ul class="text-sm text-zinc-400 space-y-2">
+                <li class="flex items-start gap-2"><span class="text-neon-cyan mt-1">›</span>Rebuilt legacy Comet request handlers as a standardized REST API across 7+ admin modules, on a layered controller/provider/service/repository structure.</li>
+                <li class="flex items-start gap-2"><span class="text-neon-cyan mt-1">›</span>Tracked down and fixed recurring production defects using AWS CloudWatch logs and root cause analysis.</li>
+                <li class="flex items-start gap-2"><span class="text-neon-cyan mt-1">›</span>Took point on L1/L2/L3 incidents for a 200+ storefront platform, closing tickets within SLA.</li>
+              </ul>
+            </div>
+
+            <div class="reveal glass rounded-2xl p-6" style="transition-delay:100ms">
+              <span class="text-xs font-mono text-neon-purple mb-2 block">Mar 2021 — Mar 2026</span>
+              <h4 class="text-base font-semibold text-white mb-1">Software Engineer (continued)</h4>
+              <p class="text-sm text-neon-cyan font-medium mb-3">iQuadra Information Services LLC, Nellore</p>
+              <ul class="text-sm text-zinc-400 space-y-2">
+                <li class="flex items-start gap-2"><span class="text-neon-purple mt-1">›</span>Documented back-end implementations and production-issue solutions in Confluence, and trained new teammates on support workflows.</li>
+                <li class="flex items-start gap-2"><span class="text-neon-purple mt-1">›</span>Stood up GCP data pipelines and Google Data Studio dashboards to track ticket trends and SLA performance.</li>
+                <li class="flex items-start gap-2"><span class="text-neon-purple mt-1">›</span>Shipped 40+ merged pull requests, kept small and reviewable, in an Agile team giving bi-weekly Scrum updates.</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Education + Certifications -->
+        <div class="grid lg:grid-cols-2 gap-16">
+
+          <!-- Education -->
+          <div>
+            <h3 class="reveal text-xl font-bold text-white mb-8 flex items-center gap-3">
+              <span class="iconify text-neon-purple" data-icon="mdi:school" data-width="24"></span>
+              Education
+            </h3>
+
+            <div class="reveal glass rounded-2xl p-6" style="transition-delay:0ms">
+              <h4 class="text-base font-semibold text-white mb-1">B.Tech, Electrical & Electronics Engineering</h4>
+              <p class="text-sm text-neon-purple font-medium">Chintalapudi Engineering College, JNTU Kakinada</p>
+            </div>
+          </div>
+
+          <!-- What I Bring -->
+          <div>
+            <h3 class="reveal text-xl font-bold text-white mb-8 flex items-center gap-3">
+              <span class="iconify text-neon-green" data-icon="mdi:account-star-outline" data-width="24"></span>
+              What I Bring
+            </h3>
+            <div class="grid gap-3">
+
+              <div class="reveal cert-card glass rounded-xl p-4 flex items-start gap-4" style="transition-delay:100ms">
+                <div class="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <span class="iconify text-neon-cyan" data-icon="mdi:magnify-scan" data-width="20"></span>
+                </div>
+                <div>
+                  <h4 class="text-sm font-semibold text-white">Root Cause, Not Just Symptoms</h4>
+                  <p class="text-xs text-zinc-500">Reads logs first, fixes what's actually broken</p>
+                </div>
+              </div>
+
+              <div class="reveal cert-card glass rounded-xl p-4 flex items-start gap-4" style="transition-delay:150ms">
+                <div class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <span class="iconify text-neon-purple" data-icon="mdi:message-text-outline" data-width="20"></span>
+                </div>
+                <div>
+                  <h4 class="text-sm font-semibold text-white">Strong Communication & Analytical Skills</h4>
+                  <p class="text-xs text-zinc-500">Clear documentation, clear troubleshooting</p>
+                </div>
+              </div>
+
+              <div class="reveal cert-card glass rounded-xl p-4 flex items-start gap-4" style="transition-delay:200ms">
+                <div class="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <span class="iconify text-neon-green" data-icon="mdi:sync" data-width="20"></span>
+                </div>
+                <div>
+                  <h4 class="text-sm font-semibold text-white">Adaptable Across Environments</h4>
+                  <p class="text-xs text-zinc-500">Comfortable picking up new tools and systems fast</p>
+                </div>
+              </div>
+
+              <div class="reveal cert-card glass rounded-xl p-4 flex items-start gap-4" style="transition-delay:250ms">
+                <div class="w-10 h-10 rounded-lg bg-pink-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <span class="iconify text-pink-400" data-icon="mdi:sitemap-outline" data-width="20"></span>
+                </div>
+                <div>
+                  <h4 class="text-sm font-semibold text-white">Organized Under SLA Pressure</h4>
+                  <p class="text-xs text-zinc-500">Keeps concurrent tickets on track, on time</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- AI ASSISTANT -->
+    <section id="ai-assistant" class="py-24 md:py-36 px-4 relative">
+      <div class="glow-orb w-[500px] h-[500px] bg-purple-500/5 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 absolute"></div>
+      <div class="max-w-3xl mx-auto relative">
+        <div class="text-center mb-12">
+          <span class="reveal text-xs font-semibold uppercase tracking-widest text-neon-cyan/70 mb-4 block">Interactive</span>
+          <h2 class="reveal text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4" style="transition-delay:100ms">
+            Ask My <span class="text-gradient">AI Assistant</span>
+          </h2>
+          <p class="reveal text-zinc-500 text-sm" style="transition-delay:150ms">Chat with an AI that knows everything about me</p>
+        </div>
+
+        <div class="reveal glass-strong rounded-3xl overflow-hidden" style="transition-delay:200ms">
+          <div class="px-6 py-4 border-b border-white/5 flex items-center gap-3">
+            <div class="relative">
+              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-neon-cyan/30 to-neon-purple/30 flex items-center justify-center">
+                <span class="iconify text-neon-cyan" data-icon="mdi:robot-happy" data-width="20"></span>
+              </div>
+              <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-neon-green border-2 border-black"></div>
+            </div>
+            <div>
+              <div class="text-sm font-semibold text-white">Sajida's AI</div>
+              <div class="text-[11px] text-neon-green">Online • Ready to chat</div>
+            </div>
+          </div>
+
+          <div id="chat-messages" class="p-6 h-80 overflow-y-auto space-y-4 scroll-smooth">
+            <div class="chat-message flex gap-3">
+              <div class="w-7 h-7 rounded-full bg-gradient-to-br from-neon-cyan/30 to-neon-purple/30 flex items-center justify-center shrink-0 mt-0.5">
+                <span class="iconify text-neon-cyan" data-icon="mdi:robot-happy" data-width="14"></span>
+              </div>
+              <div class="glass rounded-2xl rounded-tl-md px-4 py-3 max-w-[85%]">
+                <p class="text-sm text-zinc-300 leading-relaxed">Hey! 👋 I'm Sajida's AI assistant. Ask me anything about her skills, experience, key contributions, or how to get in touch!</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="px-6 pb-4 flex flex-wrap gap-2">
+            <button onclick="sendQuickAction('about')" class="px-3 py-1.5 rounded-full glass text-xs text-zinc-400 hover:text-neon-cyan hover:border-neon-cyan/30 transition-all">About Sajida</button>
+            <button onclick="sendQuickAction('skills')" class="px-3 py-1.5 rounded-full glass text-xs text-zinc-400 hover:text-neon-cyan hover:border-neon-cyan/30 transition-all">Skills</button>
+            <button onclick="sendQuickAction('projects')" class="px-3 py-1.5 rounded-full glass text-xs text-zinc-400 hover:text-neon-cyan hover:border-neon-cyan/30 transition-all">Key Contributions</button>
+            <button onclick="sendQuickAction('internships')" class="px-3 py-1.5 rounded-full glass text-xs text-zinc-400 hover:text-neon-cyan hover:border-neon-cyan/30 transition-all">Experience</button>
+            <button onclick="sendQuickAction('education')" class="px-3 py-1.5 rounded-full glass text-xs text-zinc-400 hover:text-neon-cyan hover:border-neon-cyan/30 transition-all">Education</button>
+            <button onclick="sendQuickAction('contact')" class="px-3 py-1.5 rounded-full glass text-xs text-zinc-400 hover:text-neon-cyan hover:border-neon-cyan/30 transition-all">Contact Info</button>
+          </div>
+
+          <div class="px-6 pb-6">
+            <form id="chat-form" class="flex gap-2">
+              <input type="text" id="chat-input" placeholder="Type your message..." class="input-field flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/8 text-sm text-white placeholder-zinc-600 outline-none" />
+              <button type="submit" class="w-11 h-11 rounded-xl bg-gradient-to-r from-neon-cyan/20 to-neon-purple/20 border border-neon-cyan/30 flex items-center justify-center text-neon-cyan hover:shadow-[0_0_20px_rgba(0,240,255,0.2)] transition-all shrink-0">
+                <span class="iconify" data-icon="mdi:send" data-width="18"></span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="py-24 md:py-36 px-4">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+          <span class="reveal text-xs font-semibold uppercase tracking-widest text-neon-cyan/70 mb-4 block">Get In Touch</span>
+          <h2 class="reveal text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight" style="transition-delay:100ms">
+            Let's <span class="text-gradient">Connect</span>
+          </h2>
+        </div>
+        <div class="grid md:grid-cols-2 gap-12">
+          <div class="reveal-left" style="transition-delay:0ms">
+            <p class="text-zinc-400 text-base leading-relaxed mb-8">
+              I'm always open to discussing backend development and production engineering opportunities, or just having a conversation about building reliable systems. Feel free to reach out!
+            </p>
+            <div class="space-y-4 mb-10">
+              <a href="mailto:ssajida2015@gmail.com" class="flex items-center gap-4 p-4 rounded-xl glass hover:border-neon-cyan/30 transition-all group">
+                <div class="w-11 h-11 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+                  <span class="iconify text-neon-cyan" data-icon="mdi:email-outline" data-width="22"></span>
+                </div>
+                <div>
+                  <div class="text-xs text-zinc-500 mb-0.5">Email</div>
+                  <div class="text-sm text-zinc-300 group-hover:text-neon-cyan transition-colors">ssajida2015@gmail.com</div>
+                </div>
+              </a>
+              <a href="tel:+916304966705" class="flex items-center gap-4 p-4 rounded-xl glass hover:border-neon-cyan/30 transition-all group">
+                <div class="w-11 h-11 rounded-xl bg-green-500/10 flex items-center justify-center">
+                  <span class="iconify text-neon-green" data-icon="mdi:phone" data-width="22"></span>
+                </div>
+                <div>
+                  <div class="text-xs text-zinc-500 mb-0.5">Phone</div>
+                  <div class="text-sm text-zinc-300 group-hover:text-neon-green transition-colors">+91 6304966705</div>
+                </div>
+              </a>
+              <div class="flex items-center gap-4 p-4 rounded-xl glass">
+                <div class="w-11 h-11 rounded-xl bg-green-500/10 flex items-center justify-center">
+                  <span class="iconify text-neon-green" data-icon="mdi:map-marker" data-width="22"></span>
+                </div>
+                <div>
+                  <div class="text-xs text-zinc-500 mb-0.5">Location</div>
+                  <div class="text-sm text-zinc-300">Guntur, Andhra Pradesh, India</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal" style="transition-delay:150ms">
+            <form id="contact-form" class="glass rounded-2xl p-8 space-y-5">
+              <input type="text" name="honeypot" style="display:none" tabindex="-1" autocomplete="off" />
+              <div>
+                <label class="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-2 block">Name</label>
+                <input type="text" name="from_name" required placeholder="Your name" class="input-field w-full px-4 py-3 rounded-xl bg-white/5 border border-white/8 text-sm text-white placeholder-zinc-600 outline-none" />
+              </div>
+              <div>
+                <label class="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-2 block">Email</label>
+                <input type="email" name="from_email" required placeholder="your@email.com" class="input-field w-full px-4 py-3 rounded-xl bg-white/5 border border-white/8 text-sm text-white placeholder-zinc-600 outline-none" />
+              </div>
+              <div>
+                <label class="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-2 block">Message</label>
+                <textarea name="message" required rows="4" placeholder="Tell me about your project or opportunity..." class="input-field w-full px-4 py-3 rounded-xl bg-white/5 border border-white/8 text-sm text-white placeholder-zinc-600 outline-none resize-none"></textarea>
+              </div>
+              <button type="submit" class="btn-primary w-full py-3.5 rounded-xl bg-gradient-to-r from-neon-cyan/20 to-neon-purple/20 border border-neon-cyan/30 text-sm font-semibold text-white flex items-center justify-center gap-2">
+                <span class="iconify" data-icon="mdi:send" data-width="18"></span>
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="relative z-10 border-t border-white/5 py-12 px-4">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="text-sm text-zinc-600">
+        © 2026 Pathan Sajida. Crafted with <span class="text-neon-cyan">♥</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="mailto:ssajida2015@gmail.com" class="w-9 h-9 rounded-lg glass flex items-center justify-center text-zinc-500 hover:text-neon-cyan transition-colors">
+          <span class="iconify" data-icon="mdi:email" data-width="18"></span>
+        </a>
+        <a href="#" onclick="downloadResume();return false;" class="w-9 h-9 rounded-lg glass flex items-center justify-center text-zinc-500 hover:text-neon-cyan transition-colors">
+          <span class="iconify" data-icon="mdi:download" data-width="18"></span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast-container" class="fixed bottom-6 right-6 z-[100] space-y-3"></div>
+
+  <!-- SMOKY WAVE BACKGROUND -->
+  <script>
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+    const waves = [
+      { yRatio: 0.38, amplitude: 120, length: 0.0018, speed: 0.006, opacity: 0.20 },
+      { yRatio: 0.50, amplitude: 150, length: 0.0012, speed: 0.004, opacity: 0.14 },
+      { yRatio: 0.60, amplitude: 100, length: 0.0022, speed: 0.008, opacity: 0.16 },
+      { yRatio: 0.44, amplitude: 130, length: 0.0009, speed: 0.003, opacity: 0.11 },
+      { yRatio: 0.55, amplitude: 90,  length: 0.0028, speed: 0.010, opacity: 0.10 },
+    ];
+    let offset = 0;
+    function getY(wave, x) {
+      const base = height * wave.yRatio;
+      const main = Math.sin(x * wave.length + offset * wave.speed) * wave.amplitude;
+      const sub  = Math.cos(x * wave.length * 0.55 - offset * wave.speed * 0.7) * (wave.amplitude * 0.45);
+      return base + main + sub;
+    }
+    function drawSmokyWave(wave) {
+      for (let blur = 0; blur < 5; blur++) {
+        ctx.beginPath();
+        for (let x = 0; x <= width; x++) {
+          const y = getY(wave, x);
+          x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = `rgba(200,200,220,${wave.opacity * 0.035})`;
+        ctx.lineWidth = 80 + blur * 40;
+        ctx.lineJoin = 'round';
+        ctx.stroke();
+      }
+      ctx.beginPath();
+      for (let x = 0; x <= width; x++) {
+        const y = getY(wave, x);
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = `rgba(230,230,255,${wave.opacity * 0.5})`;
+      ctx.lineWidth = 8;
+      ctx.stroke();
+      ctx.beginPath();
+      for (let x = 0; x <= width; x++) {
+        const y = getY(wave, x);
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = `rgba(255,255,255,${wave.opacity})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.globalAlpha = 1;
+      waves.forEach(drawSmokyWave);
+      ctx.globalCompositeOperation = 'source-over';
+      offset += 0.8;
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+
+  <!-- MAIN SCRIPTS -->
+  <script>
+    // Typing Animation
+    const typedEl = document.getElementById('typed-text');
+    const phrases = ['Software Engineer', 'Backend Developer', 'Production Support Engineer', 'Java & Spring Boot Developer', 'REST API Developer'];
+    let phraseIdx = 0, charIdx = 0, isDeleting = false;
+    function typeLoop() {
+      const current = phrases[phraseIdx];
+      if (isDeleting) {
+        typedEl.textContent = current.substring(0, charIdx--);
+        if (charIdx < 0) { isDeleting = false; phraseIdx = (phraseIdx + 1) % phrases.length; setTimeout(typeLoop, 400); return; }
+        setTimeout(typeLoop, 40);
+      } else {
+        typedEl.textContent = current.substring(0, ++charIdx);
+        if (charIdx === current.length) { isDeleting = true; setTimeout(typeLoop, 2000); return; }
+        setTimeout(typeLoop, 80);
+      }
+    }
+    typeLoop();
+
+    // Scroll Reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-scale').forEach(el => revealObserver.observe(el));
+
+    // Navbar Scroll
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 60));
+
+    // Active Nav Link
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => { if (window.scrollY >= s.offsetTop - 200) current = s.getAttribute('id'); });
+      navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + current));
+    });
+
+    // Mobile Menu
+    const mobileMenu = document.getElementById('mobile-menu');
+    document.getElementById('menu-toggle').addEventListener('click', () => mobileMenu.classList.add('open'));
+    document.getElementById('menu-close').addEventListener('click', () => mobileMenu.classList.remove('open'));
+    document.querySelectorAll('.mobile-link').forEach(link => link.addEventListener('click', () => mobileMenu.classList.remove('open')));
+
+    // Toast
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'glass-strong rounded-xl px-5 py-3.5 text-sm text-white border border-neon-cyan/20 flex items-center gap-3 min-w-[280px]';
+      toast.style.animation = 'chatIn 0.4s ease';
+      toast.innerHTML = `<span class="iconify text-neon-cyan shrink-0" data-icon="mdi:check-circle" data-width="20"></span><span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(20px)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Resume Download
+    function downloadResume() {
+      const link = document.createElement('a');
+      link.href = './PATHAN_SAJIDA_RESUME.docx';
+      link.download = 'PATHAN_SAJIDA_RESUME.docx';
+      link.click();
+      showToast('📄 Resume download started!');
+    }
+
+    // AI Chat
+    const chatMessages = document.getElementById('chat-messages');
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+
+    const responses = {
+      about: `I'm Pathan Sajida — a backend-focused Software Engineer with 5 years building and supporting Java and Spring Boot REST APIs for a 200+ storefront e-commerce and print platform.\n\nI'm known for tracing production issues to root cause fast, using AWS CloudWatch and Zabbix to keep incident response inside SLA, while steadily driving a legacy Comet-to-REST migration to completion. Now targeting backend development and production engineering roles.`,
+
+      skills: `Here are Sajida's technical skills:\n\n☕ **Languages:** Java, JavaScript, Python\n🌐 **Frameworks & Web:** Spring Boot, ReactJS, HTML, CSS\n☁️ **Cloud & Monitoring:** AWS CloudWatch, AWS Console, SQS, Zabbix, GCP (Cloud Functions, BigQuery)\n🗄️ **Databases:** SQL, PostgreSQL, PG Admin\n🛠️ **Support & Workflow Tools:** Jenkins, ASG, JIRA, Confluence, Fresh Service, Jitbit, Enfocus Switch, GitHub, STS\n💪 **Strengths:** Root Cause Analysis, Incident Management, Agile Collaboration, Communication`,
+
+      projects: `Sajida's key contributions:\n\n🔗 **Legacy Comet-to-REST Migration** — Rebuilt legacy handlers as a standardized REST API across 7+ admin modules, with 40+ merged pull requests.\n\n🚨 **Production Support Across 200+ Storefronts** — L1/L2/L3 incident response using AWS CloudWatch and Zabbix, resolving defects within SLA.\n\n📊 **Support Analytics & SLA Dashboards** — GCP pipelines (Cloud Functions, BigQuery) feeding Google Data Studio dashboards for ticket trends and SLA performance.\n\n🖨️ **Print Fulfillment Workflow Automation** — Enfocus Switch, Pitstop, and Phoenix automations for proof-jobs, packing slips, and production tickets.`,
+
+      internships: `Sajida's professional experience:\n\n💼 **Software Engineer** — iQuadra Information Services LLC, Nellore (Mar 2021 – Mar 2026)\n\nRebuilt legacy Comet request handlers as a standardized REST API across 7+ admin modules, took point on L1/L2/L3 incidents for a 200+ storefront platform, and shipped 40+ merged pull requests — all while working in an Agile team giving bi-weekly Scrum updates.`,
+
+      education: `Sajida's education:\n\n🎓 **B.Tech, Electrical & Electronics Engineering**\nChintalapudi Engineering College, JNTU Kakinada`,
+
+      contact: `How to reach Sajida:\n\n📧 **Email:** ssajida2015@gmail.com\n📱 **Phone:** +91 6304966705\n📍 **Location:** Guntur, Andhra Pradesh, India\n\nCurrently open to backend development and production engineering opportunities.`,
+
+      default: `I can tell you about Sajida's **skills**, **key contributions**, **experience**, **education**, or **contact information**. What would you like to know?`
+    };
+
+    function classifyMessage(msg) {
+      const m = msg.toLowerCase();
+      if (m.includes('about') || m.includes('who') || m.includes('tell me') || m.includes('introduce') || m.includes('summary')) return 'about';
+      if (m.includes('skill') || m.includes('tech') || m.includes('stack') || m.includes('language') || m.includes('tool') || m.includes('strength')) return 'skills';
+      if (m.includes('project') || m.includes('work') || m.includes('built') || m.includes('contribution') || m.includes('migration') || m.includes('rest api') || m.includes('dashboard') || m.includes('fulfillment')) return 'projects';
+      if (m.includes('intern') || m.includes('iquadra') || m.includes('experience') || m.includes('job') || m.includes('role')) return 'internships';
+      if (m.includes('education') || m.includes('college') || m.includes('school') || m.includes('btech') || m.includes('degree') || m.includes('study') || m.includes('studied')) return 'education';
+      if (m.includes('contact') || m.includes('email') || m.includes('reach') || m.includes('hire') || m.includes('connect') || m.includes('phone') || m.includes('number')) return 'contact';
+      return 'default';
+    }
+
+    function formatMessage(text) {
+      return text
+        .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>')
+        .replace(/\n/g, '<br>');
+    }
+
+    function addMessage(content, isUser = false) {
+      const div = document.createElement('div');
+      div.className = 'chat-message flex gap-3' + (isUser ? ' justify-end' : '');
+      if (isUser) {
+        div.innerHTML = `<div class="bg-gradient-to-r from-neon-cyan/20 to-neon-purple/20 border border-neon-cyan/20 rounded-2xl rounded-tr-md px-4 py-3 max-w-[85%]"><p class="text-sm text-zinc-200 leading-relaxed">${content}</p></div>`;
+      } else {
+        div.innerHTML = `<div class="w-7 h-7 rounded-full bg-gradient-to-br from-neon-cyan/30 to-neon-purple/30 flex items-center justify-center shrink-0 mt-0.5"><span class="iconify text-neon-cyan" data-icon="mdi:robot-happy" data-width="14"></span></div><div class="glass rounded-2xl rounded-tl-md px-4 py-3 max-w-[85%]"><p class="text-sm text-zinc-300 leading-relaxed">${formatMessage(content)}</p></div>`;
+      }
+      chatMessages.appendChild(div);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+      const div = document.createElement('div');
+      div.className = 'chat-message flex gap-3';
+      div.id = 'typing-indicator';
+      div.innerHTML = `<div class="w-7 h-7 rounded-full bg-gradient-to-br from-neon-cyan/30 to-neon-purple/30 flex items-center justify-center shrink-0 mt-0.5"><span class="iconify text-neon-cyan" data-icon="mdi:robot-happy" data-width="14"></span></div><div class="glass rounded-2xl rounded-tl-md px-4 py-3"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+      chatMessages.appendChild(div);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      const el = document.getElementById('typing-indicator');
+      if (el) el.remove();
+    }
+
+    function handleChat(msg) {
+      addMessage(msg, true);
+      showTypingIndicator();
+      const category = classifyMessage(msg);
+      setTimeout(() => {
+        removeTypingIndicator();
+        addMessage(responses[category]);
+      }, 800 + Math.random() * 800);
+    }
+
+    chatForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const msg = chatInput.value.trim();
+      if (!msg) return;
+      chatInput.value = '';
+      handleChat(msg);
+    });
+
+    function sendQuickAction(type) {
+      const labels = {
+        about: 'Tell me about Sajida',
+        skills: 'What are her skills?',
+        projects: 'Show me her key contributions',
+        internships: 'What is her professional experience?',
+        education: 'Tell me about her education',
+        contact: 'How can I contact her?'
+      };
+      addMessage(labels[type], true);
+      showTypingIndicator();
+      setTimeout(() => {
+        removeTypingIndicator();
+        addMessage(responses[type]);
+      }, 800 + Math.random() * 800);
+    }
+
+    // Contact Form
+    document.getElementById('contact-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (form.querySelector('[name="honeypot"]').value !== '') return;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `Sending...`;
+      emailjs.sendForm('service_hdv8gyf', 'template_q8gpn52', form)
+        .then(() => {
+          showToast('✉️ Message sent! I\'ll get back to you soon.');
+          form.reset();
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span class="iconify" data-icon="mdi:send" data-width="18"></span> Send Message`;
+        })
+        .catch((error) => {
+          console.error('EmailJS error:', error);
+          showToast('❌ Failed to send. Please email me directly at ssajida2015@gmail.com');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span class="iconify" data-icon="mdi:send" data-width="18"></span> Send Message`;
+        });
+    });
+  </script>
+</body>
+</html>

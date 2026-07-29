@@ -148,7 +148,7 @@
         <a href="#contact" class="nav-link text-sm font-medium text-zinc-400">Contact</a>
       </div>
       <div class="hidden md:flex items-center gap-3">
-        <a href="mailto:ssajida2015@gmail.com" class="btn-outline w-10 h-10 rounded-xl glass flex items-center justify-center text-zinc-400 hover:text-neon-cyan">
+        <a href="mailto:" class="btn-outline w-10 h-10 rounded-xl glass flex items-center justify-center text-zinc-400 hover:text-neon-cyan">
           <span class="iconify" data-icon="mdi:email-outline" data-width="20"></span>
         </a>
         <button onclick="downloadResume()" class="btn-primary px-5 py-2.5 rounded-xl glass text-sm font-medium text-white flex items-center gap-2">
@@ -174,7 +174,7 @@
     <a href="#ai-assistant" class="mobile-link text-2xl font-semibold text-zinc-300 hover:text-neon-cyan transition-colors">AI Chat</a>
     <a href="#contact" class="mobile-link text-2xl font-semibold text-zinc-300 hover:text-neon-cyan transition-colors">Contact</a>
     <div class="flex gap-4 mt-4">
-      <a href="mailto:ssajida2015@gmail.com" class="w-12 h-12 rounded-xl glass flex items-center justify-center text-zinc-400 hover:text-neon-cyan transition-colors">
+      <a href="mailto:" class="w-12 h-12 rounded-xl glass flex items-center justify-center text-zinc-400 hover:text-neon-cyan transition-colors">
         <span class="iconify" data-icon="mdi:email-outline" data-width="24"></span>
       </a>
     </div>
@@ -659,22 +659,22 @@
               I'm always open to discussing backend development and production engineering opportunities, or just having a conversation about building reliable systems. Feel free to reach out!
             </p>
             <div class="space-y-4 mb-10">
-              <a href="mailto:ssajida2015@gmail.com" class="flex items-center gap-4 p-4 rounded-xl glass hover:border-neon-cyan/30 transition-all group">
+              <a href="mailto:" class="flex items-center gap-4 p-4 rounded-xl glass hover:border-neon-cyan/30 transition-all group">
                 <div class="w-11 h-11 rounded-xl bg-cyan-500/10 flex items-center justify-center">
                   <span class="iconify text-neon-cyan" data-icon="mdi:email-outline" data-width="22"></span>
                 </div>
                 <div>
                   <div class="text-xs text-zinc-500 mb-0.5">Email</div>
-                  <div class="text-sm text-zinc-300 group-hover:text-neon-cyan transition-colors">ssajida2015@gmail.com</div>
+                  <div class="text-sm text-zinc-300 group-hover:text-neon-cyan transition-colors"></div>
                 </div>
               </a>
-              <a href="tel:+916304966705" class="flex items-center gap-4 p-4 rounded-xl glass hover:border-neon-cyan/30 transition-all group">
+              <a href="tel:+91" class="flex items-center gap-4 p-4 rounded-xl glass hover:border-neon-cyan/30 transition-all group">
                 <div class="w-11 h-11 rounded-xl bg-green-500/10 flex items-center justify-center">
                   <span class="iconify text-neon-green" data-icon="mdi:phone" data-width="22"></span>
                 </div>
                 <div>
                   <div class="text-xs text-zinc-500 mb-0.5">Phone</div>
-                  <div class="text-sm text-zinc-300 group-hover:text-neon-green transition-colors">+91 6304966705</div>
+                  <div class="text-sm text-zinc-300 group-hover:text-neon-green transition-colors">+91 </div>
                 </div>
               </a>
               <div class="flex items-center gap-4 p-4 rounded-xl glass">
@@ -722,7 +722,7 @@
         © 2026 Pathan Sajida. Crafted with <span class="text-neon-cyan">♥</span>
       </div>
       <div class="flex items-center gap-4">
-        <a href="mailto:ssajida2015@gmail.com" class="w-9 h-9 rounded-lg glass flex items-center justify-center text-zinc-500 hover:text-neon-cyan transition-colors">
+        <a href="mailto:" class="w-9 h-9 rounded-lg glass flex items-center justify-center text-zinc-500 hover:text-neon-cyan transition-colors">
           <span class="iconify" data-icon="mdi:email" data-width="18"></span>
         </a>
         <a href="#" onclick="downloadResume();return false;" class="w-9 h-9 rounded-lg glass flex items-center justify-center text-zinc-500 hover:text-neon-cyan transition-colors">
@@ -885,7 +885,7 @@
 
       education: `Sajida's education:\n\n🎓 **B.Tech, Electrical & Electronics Engineering**\nChintalapudi Engineering College, JNTU Kakinada`,
 
-      contact: `How to reach Sajida:\n\n📧 **Email:** ssajida2015@gmail.com\n📱 **Phone:** +91 6304966705\n📍 **Location:** Guntur, Andhra Pradesh, India\n\nCurrently open to backend development and production engineering opportunities.`,
+      contact: `How to reach Sajida:\n\n📧 **Email:** \n📱 **Phone:** \n📍 **Location:**  Andhra Pradesh, India\n\nCurrently open to backend development and production engineering opportunities.`,
 
       default: `I can tell you about Sajida's **skills**, **key contributions**, **experience**, **education**, or **contact information**. What would you like to know?`
     };
@@ -985,7 +985,7 @@
         })
         .catch((error) => {
           console.error('EmailJS error:', error);
-          showToast('❌ Failed to send. Please email me directly at ssajida2015@gmail.com');
+          showToast('❌ Failed to send. Please email me directly at ');
           submitBtn.disabled = false;
           submitBtn.innerHTML = `<span class="iconify" data-icon="mdi:send" data-width="18"></span> Send Message`;
         });
